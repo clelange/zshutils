@@ -1,0 +1,42 @@
+[user]
+	name = Clemens Lange
+	email = clemens.lange@cern.ch
+	github = clelange
+[alias]
+	a = add
+	ap = add --patch
+	am = am -s
+	c = commit
+	cs = commit -s
+	ca = commit --amend
+	co = checkout
+	b = branch -vv
+	l = log --graph --all --abbrev-commit --date=relative --format=format:'%C(bold blue)%h%C(reset) %C(green)%ar %C(yellow)%an%C(bold yellow)%d%C(reset)%n        %C(white)%s%n'
+	lt = log --graph --abbrev-commit --date=relative --format=format:'%C(bold blue)%h%C(reset) %C(green)%ar %C(yellow)%an%C(bold yellow)%d%C(reset)%n        %C(white)%s%n'
+	ll = log --graph --abbrev-commit --date=relative --format=format:'%C(bold blue)%h%C(reset) %C(green)%ar %C(yellow)%an%C(bold yellow)%d%C(reset)%n        %C(white)%s%n' -10 HEAD~6..HEAD
+	lf = log --pretty=fuller
+	ls = log --pretty=fuller --stat
+	s = status
+	d = diff
+	ds = diff --stat
+	dc = diff --cached
+	dcs = diff --cached --stat
+	dp = show
+	dhh = diff HEAD^!
+	dhhs = diff HEAD^! --stat
+	doh = diff origin/master HEAD
+	dohs = diff origin/master HEAD --stat
+	rb = rebase
+	rbi = rebase -i
+	rbio = rebase -i origin/master
+	t = tag -a
+	tl = tag -ln1
+[core]
+	editor = vim
+	autocrlf = input
+	safecrlf = true
+[push]
+	default = simple
+[color]
+	ui = auto
+

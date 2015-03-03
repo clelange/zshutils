@@ -1,0 +1,181 @@
+Host *
+ ServerAliveInterval 300
+ ServerAliveCountMax 2
+ ForwardX11Timeout 2h
+ ForwardX11 yes
+ ForwardX11Trusted no
+ RemoteForward 52699 localhost:52699
+
+Host lxplus5.cern.ch lxplus5
+ GSSAPIAuthentication yes
+ GSSAPIDelegateCredentials yes
+ Protocol 2
+ ForwardX11 yes
+ ForwardX11Trusted no
+ GSSAPITrustDns yes
+ GSSAPIKeyExchange no
+ PubkeyAuthentication no 
+ PasswordAuthentication yes
+ # additional stuff for CMS online cluster
+ Compression yes
+
+Host lxplus lxplus.cern.ch
+ HostName lxplus.cern.ch
+ # Specify the remote username if different from your local one
+ #User remote_username
+ Compression yes
+ # Use SSHv2 only
+ Protocol 2
+ # Forward you SSH key agent so that it can be used on further hops
+ ForwardAgent yes
+ # For X11
+ #ForwardX11 yes
+ #ForwardX11Trusted no
+ # In case there is kerberos configured locally
+ GSSAPITrustDns yes
+ GSSAPIAuthentication yes
+ GSSAPIDelegateCredentials yes
+
+ 
+
+Host svn.cern.ch svn 
+ ControlMaster no
+ GSSAPIAuthentication yes 
+ GSSAPIDelegateCredentials yes 
+ Protocol 2 
+ ForwardX11 no
+ ForwardAgent no
+
+Host pc1bpix*
+ GSSAPIAuthentication yes
+ GSSAPIDelegateCredentials yes
+ Protocol 2
+ ForwardX11 yes
+ ForwardX11Trusted no
+ GSSAPITrustDns yes
+ GSSAPIKeyExchange no
+ PubkeyAuthentication no
+ PasswordAuthentication yes
+
+Host uzhcms1*
+ GSSAPIAuthentication yes
+ GSSAPIDelegateCredentials yes
+ Protocol 2
+ ForwardX11 yes
+ ForwardX11Trusted no
+ GSSAPITrustDns yes
+ GSSAPIKeyExchange no
+ PubkeyAuthentication no
+ PasswordAuthentication yes
+
+######################
+# UZH Network Access #
+######################
+
+Host uzhcms1.cern.ch
+  # Specify the remote username if different from your local one
+  #User remote_username
+  # Use SSHv2 only
+  Protocol 2
+  # Forward you SSH key agent so that it can be used on further hops
+  ForwardAgent yes
+  # For X11
+  ForwardX11 yes
+  ForwardX11Trusted no
+
+  # Go through lxplus so that it works from wherever you are
+  ProxyCommand ssh lxplus.cern.ch nc %h 22
+
+######################
+# CMS Network Access #
+######################
+
+Host cmsusr cmsusr* cmsusr*.cms
+  # Specify the remote username if different from your local one
+  #User remote_username
+  # Use SSHv2 only
+  Protocol 2
+  # Forward you SSH key agent so that it can be used on further hops
+  ForwardAgent yes
+  # For X11
+  ForwardX11 yes
+  ForwardX11Trusted no
+
+  # Go through lxplus so that it works from wherever you are
+  ProxyCommand ssh lxplus.cern.ch nc %h 22
+
+  # Setup a SOCKS5 proxy on local port 1080 so that you can easily browse internal CMS web sites
+  DynamicForward 1080
+
+  # Setup port forwarding for the NX server (point your NX client to local port 4022 for cmsnx0)
+  LocalForward 4022 cmsnx0:22
+  # Same as above for cmsnx1
+  LocalForward 4122 cmsnx1:22
+  # Same as above for cmsnx2
+  LocalForward 4222 cmsnx2:22
+  # Same as above for cmsnx3
+  LocalForward 4322 cmsnx3:22
+  # Same as above for cmsnx4
+  LocalForward 4422 cmsnx4:22
+
+  # Windows remote desktop forwarding
+  #LocalForward 5001 mywindows_machine:3389
+  # VNC port forwarding (add as many as you want)
+  #LocalForward 5902 mymaccomputer:5900
+  # Extra port to use the apple remote desktop (also needs the VNC port to the same host)
+  #LocalForward 3283 mymaccomputer:3283
+
+######################
+# 904 Network Access #
+######################
+
+Host cms904usr
+	# Specify the remote username if different from your local one
+	#User remote_username
+	# Use SSHv2 only
+	Protocol 2
+	# Forward you SSH key agent so that it can be used on further hops
+	ForwardAgent yes
+	# For X11
+	#ForwardX11 yes
+	#ForwardX11Trusted no
+
+	# Go through lxplus so that it works from wherever you are
+	ProxyCommand ssh lxplus.cern.ch nc %h 22
+
+	# Setup a SOCKS5 proxy on local port 1081 so that you can easily browse internal 904 web sites
+	DynamicForward 1081
+
+	# Setup port forwarding for the NX server (point your NX client to local port 5022 for cms904nx0)
+	LocalForward 5022 cms904nx0:22
+	# Same as above for cms904nx1
+	LocalForward 5122 cms904nx1:22
+	# Same as above for cms904nx2
+	LocalForward 5222 cms904nx2:22
+
+	# DAQ OnCall settings
+
+	# Windows remote desktop forwarding
+	#LocalForward 5001 mywindows_machine:3389
+	# VNC port forwarding (add as many as you want)
+	#LocalForward 5902 mymaccomputer:5900
+	#Extra port to use the apple remote desktop
+	#LocalForward 3283 mymaccomputer:3283
+
+
+# Direct connection to cms904nx, any .cms904 machine, any IP of .cms904
+  Host cmsnx* *.cms 10.176.*.*
+  # Use SSHv2 only
+  Protocol 2
+  # Forward you SSH key agent so that it can be used on further hops
+  ForwardAgent yes
+  # For X11
+  ForwardX11 yes
+  ForwardX11Trusted no
+
+  # Go through the cmsusr connection
+  ProxyCommand ssh cmsusr nc %h 22
+
+ControlMaster auto
+ControlPath ~/.ssh/master_%l_%h_%p_%r
+
